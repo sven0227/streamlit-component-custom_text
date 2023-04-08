@@ -21,7 +21,7 @@ const CustomText = (props: Props) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      axios.get("http://localhost:8000/data").then((response) => {
+      axios.get("http://localhost:8000/get-text").then((response) => {
         setRowData(response.data);
         console.log('response.data :>> ', response.data);
       });
@@ -29,7 +29,13 @@ const CustomText = (props: Props) => {
 
     fetchData();
     const interval = setInterval(fetchData, 1000);
-    return () => clearInterval(interval);
+    const timeout = setTimeout(() => {
+      clearInterval(interval);
+    }, 10000);
+
+    return () => {
+      clearInterval(interval); clearTimeout(timeout);
+    }
   }, []);
 
   return (
@@ -40,8 +46,7 @@ const CustomText = (props: Props) => {
         width: '600px',
       }}
     >
-
-      Custom Text
+      {rowData}
     </div>
   );
 };

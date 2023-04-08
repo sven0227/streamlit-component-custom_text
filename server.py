@@ -14,10 +14,7 @@ app.add_middleware(
 )
 
 
-@app.get("/data")
+@app.get("/get-text")
 async def read_data():
-    df = pd.read_pickle("data")
-    print(df.to_json())
-    data = df.to_dict(orient="records")
-    return JSONResponse(content=data)
+    return JSONResponse(content="Text form fastAPI")
 # uvicorn server:app --reload
