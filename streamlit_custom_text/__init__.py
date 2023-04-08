@@ -1,9 +1,18 @@
 import streamlit.components.v1 as components
+from decouple import config
+import os
 
-_component_func = components.declare_component(
-    "custom_slider",
-    url="http://localhost:3001",
-)
+_RELEASE = config("RELEASE", default=True, cast=bool)
+
+if not _RELEASE:
+    _component_func = components.declare_component(
+        "custom_slider",
+        url="http://localhost:3001",
+    )
+else:
+    parent_dir = os.path.dirname(os.path.abspath(__file__))
+    build_dir = os.path.join(parent_dir, "frontend","builds")
+    _component_func = components.declare_component("custom_text", path=build_dir)
 
 # Add label, min and max as input arguments of the wrapped function
 # Pass them to _component_func which will deliver them to the frontend part
