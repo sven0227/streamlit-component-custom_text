@@ -9,7 +9,7 @@ _component_func = components.declare_component(
 # Pass them to _component_func which will deliver them to the frontend part
 
 
-def st_custom_text(api, text_size, refresh_sec, refresh_cutoff_sec):
+def st_custom_text(api, text_size = 10, refresh_sec = 1, refresh_cutoff_sec = 10):
     component_value = _component_func(
         api=api,
         text_size= text_size,

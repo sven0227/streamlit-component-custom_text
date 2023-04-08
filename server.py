@@ -14,7 +14,10 @@ app.add_middleware(
 )
 
 
-@app.get("/get-text")
+@app.get("/get-text/1")
 async def read_data():
-    return JSONResponse(content="Text form fastAPI")
+    return JSONResponse(content="Text from fastAPI-1")
+@app.get("/get-text/2")
+async def read_data():
+    return JSONResponse(content="Text from fastAPI-2")
 # uvicorn server:app --reload

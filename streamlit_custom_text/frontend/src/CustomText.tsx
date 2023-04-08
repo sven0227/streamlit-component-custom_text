@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FC } from 'react';
 import axios from "axios"
 import {
   ComponentProps,
@@ -8,42 +8,49 @@ import {
 
 type Props = {
   api: string,
-  text_size: number,
-  size: number,
-  height: number,
-  hoverText: number,
+  text_size?: number,
+  refresh_sec?: number,
+  refresh_cutoff_sec?: number,
 }
 
-const CustomText = (props: Props) => {
-  const { api, text_size, size, height, hoverText } = props;
+const defaultProps: Props = {
+  api: "",
+  text_size: 10,
+  refresh_sec: 1,
+  refresh_cutoff_sec: 10
+}
+
+const CustomText: FC<Props> = (props: Props = defaultProps) => {
+  const { api, text_size = 10, refresh_sec = 1, refresh_cutoff_sec = 10 } = props;
   const [rowData, setRowData] = useState([]);
-  useEffect(() => Streamlit.setFrameHeight(5000));
+  useEffect(() => Streamlit.setFrameHeight());
 
   useEffect(() => {
+    console.log(props);
     const fetchData = async () => {
-      axios.get("http://localhost:8000/get-text").then((response) => {
+      axios.get(api).then((response) => {
         setRowData(response.data);
-        console.log('response.data :>> ', response.data);
+        Streamlit.setComponentValue(response.data)
+        console.log(response.data);
       });
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 1000);
+    const interval = setInterval(fetchData, refresh_sec * 1000);
     const timeout = setTimeout(() => {
       clearInterval(interval);
-    }, 10000);
+    }, refresh_cutoff_sec * 1000);
 
     return () => {
-      clearInterval(interval); clearTimeout(timeout);
+      clearInterval(interval);
+      clearTimeout(timeout);
     }
   }, []);
 
   return (
     <div
-      className="ag-theme-alpine"
       style={{
-        height: '500px',
-        width: '600px',
+        fontSize: text_size
       }}
     >
       {rowData}

@@ -8,5 +8,7 @@ label = st.sidebar.text_input('Label', 'Hello world')
 min_value, max_value = st.sidebar.slider("Range slider", 0, 100, (0, 50))
 
 # Pass the parameters inside the wrapper function
-v = st_custom_text(api="", text_size = 7, refresh_sec =5,refresh_cutoff_sec =300)
-st.write(v)
+v1 = st_custom_text(api="http://localhost:8000/get-text/1")
+st.write(v1)
+v2 = st_custom_text(api="http://localhost:8000/get-text/2", text_size = 17, refresh_sec =5,refresh_cutoff_sec =300)
+st.write(v2)

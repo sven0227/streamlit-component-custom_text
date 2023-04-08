@@ -4,42 +4,22 @@ import {
   Streamlit,
   withStreamlitConnection,
 } from "streamlit-component-lib";
-import { Slider } from "baseui/slider";
-import { setTimeout } from "timers";
-import axios from "axios";
-import Aggrid from "./CustomText";
 import CustomText from "./CustomText";
 
 const Main = (props: ComponentProps) => {
-  /**
-   * Destructuring JSON objects is a good habit.
-   * This will look for label, minValue and maxValue keys
-   * to store them in separate variables.
-   */
-  const { label, minValue, maxValue } = props.args;
-  const { api, text_size, size, height, hoverText } = props.args;
-
-  const [value, setValue] = useState([10]);
+  const { api, text_size, refresh_sec, refresh_cutoff_sec } = props.args;
 
   useEffect(() => Streamlit.setFrameHeight());
-  // Add a label and pass min/max variables to the baseui Slider
+
   return (
     <>
-      <h3>{label}</h3>
-      <Aggrid
+      <h3>Vorol's Custom Text Component</h3>
+      <CustomText
         api={api}
         text_size={text_size}
-        size={size}
-        height={height}
-        hoverText={hoverText}
+        refresh_sec={refresh_sec}
+        refresh_cutoff_sec={refresh_cutoff_sec}
       />
-      {/* <Slider
-        value={value}
-        onChange={({ value }) => value && setValue(value)}
-        onFinalChange={({ value }) => console.log(value)}
-        min={minValue}
-        max={maxValue}
-      /> */}
     </>
   );
 };
