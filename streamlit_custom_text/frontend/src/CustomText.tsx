@@ -17,11 +17,11 @@ const defaultProps: Props = {
   api: "",
   text_size: 10,
   refresh_sec: 1,
-  refresh_cutoff_sec: 10
+  refresh_cutoff_sec: 0
 }
 
 const CustomText: FC<Props> = (props: Props = defaultProps) => {
-  const { api, text_size = 10, refresh_sec = 1, refresh_cutoff_sec = 10 } = props;
+  const { api, text_size = 10, refresh_sec = 1, refresh_cutoff_sec = 0 } = props;
   const [rowData, setRowData] = useState([]);
   useEffect(() => Streamlit.setFrameHeight());
 
@@ -30,20 +30,25 @@ const CustomText: FC<Props> = (props: Props = defaultProps) => {
     const fetchData = async () => {
       axios.get(api).then((response) => {
         setRowData(response.data);
-        Streamlit.setComponentValue(response.data)
-        console.log(response.data);
+        Streamlit.setComponentValue(response.data);
+        console.log("Fetching from", api, response.data);
       });
     };
 
     fetchData();
     const interval = setInterval(fetchData, refresh_sec * 1000);
-    const timeout = setTimeout(() => {
-      clearInterval(interval);
-    }, refresh_cutoff_sec * 1000);
+    let timeout: NodeJS.Timeout;
+    if (refresh_cutoff_sec > 0) {
+      console.log(refresh_cutoff_sec);
+      timeout = setTimeout(() => {
+        clearInterval(interval);
+        console.log("Fetching data ended, refresh rate:", refresh_sec);
+      }, refresh_cutoff_sec * 1000);
+    }
 
     return () => {
       clearInterval(interval);
-      clearTimeout(timeout);
+      if (timeout) clearTimeout(timeout);
     }
   }, []);
 
